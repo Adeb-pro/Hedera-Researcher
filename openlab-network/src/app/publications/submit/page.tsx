@@ -65,7 +65,7 @@ export default function SubmitPublicationPage() {
   const [formData, setFormData] = useState({
     title: "",
     abstract: "",
-    keywords: [],
+    keywords: [] as string[],
     category: "",
     type: "",
     journal: "",
@@ -86,8 +86,8 @@ export default function SubmitPublicationPage() {
       },
     ],
     files: {
-      manuscript: null,
-      supplementary: [],
+      manuscript: null as File | null,
+      supplementary: [] as File[],
     },
     agreements: {
       terms: false,
@@ -176,10 +176,10 @@ export default function SubmitPublicationPage() {
     }
   }
 
-  const handleAgreementChange = (field: string, checked: boolean) => {
+  const handleAgreementChange = (field: string, checked: boolean | string) => {
     setFormData((prev) => ({
       ...prev,
-      agreements: { ...prev.agreements, [field]: checked },
+      agreements: { ...prev.agreements, [field]: !!checked },
     }))
   }
 
