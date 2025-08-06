@@ -19,12 +19,13 @@ const staggerContainer = {
 }
 
 const shimmer = {
+  initial: {},
   animate: {
     backgroundPosition: ["200% 0", "-200% 0"],
     transition: {
       duration: 2,
       repeat: Number.POSITIVE_INFINITY,
-      ease: "linear",
+      ease: "linear" as const, // Linear easing
     },
   },
 }

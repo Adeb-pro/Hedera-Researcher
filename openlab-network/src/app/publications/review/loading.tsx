@@ -10,7 +10,7 @@ const shimmer = {
   },
   transition: {
     duration: 2,
-    ease: "linear",
+    ease: "linear" as const,
     repeat: Number.POSITIVE_INFINITY,
   },
 }

@@ -105,7 +105,12 @@ export default function ReviewInterface() {
     timeSpent: 0,
     completed: false,
   })
-  const [comments, setComments] = useState([])
+  const [comments, setComments] = useState<Array<{
+    id: number;
+    text: string;
+    timestamp: string;
+    type: string;
+  }>>([])
   const [newComment, setNewComment] = useState("")
 
   const handleCriteriaRating = (criteriaId: string, rating: number[]) => {

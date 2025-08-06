@@ -1,5 +1,12 @@
 import { ethers } from "ethers"
 
+// Extend Window interface to include ethereum property
+declare global {
+  interface Window {
+    ethereum?: any
+  }
+}
+
 // Contract addresses (update these with your deployed contract addresses)
 export const CONTRACT_ADDRESSES = {
   OPENLAB_NETWORK: "0x1234567890123456789012345678901234567890",

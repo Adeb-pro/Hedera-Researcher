@@ -58,7 +58,7 @@ const project = {
     hIndex: 28,
   },
   funding: { raised: 145000, goal: 200000 },
-  contributors: 23,
+  contributorCount: 23,
   timeLeft: "45 days",
   image: "/crispr-lab.png",
   tags: ["Gene Therapy", "CRISPR", "Rare Diseases", "Pediatric", "Biotechnology"],
@@ -485,7 +485,7 @@ export default function ProjectDetail() {
 
                     <div className="grid grid-cols-2 gap-4 text-center">
                       <div>
-                        <div className="text-xl font-bold text-accent-400">{project.contributors}</div>
+                        <div className="text-xl font-bold text-accent-400">{project.contributorCount}</div>
                         <div className="text-sm text-dark-400">Contributors</div>
                       </div>
                       <div>

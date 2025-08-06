@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Inter, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 import { BlockchainProvider } from "@/contexts/blockchain-context"
@@ -33,8 +33,13 @@ export const metadata: Metadata = {
     title: "OpenLab Network",
     description: "Decentralized Scientific Research Platform",
   },
-  viewport: "width=device-width, initial-scale=1",
   robots: "index, follow",
+}
+
+// Fixed: Moved viewport to separate export
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 }
 
 export default function RootLayout({

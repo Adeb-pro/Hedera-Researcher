@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Beaker, Menu, X, Wallet, ChevronDown, Zap } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Button } from "../../components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useBlockchain } from "@/contexts/blockchain-context"
 import Link from "next/link"
