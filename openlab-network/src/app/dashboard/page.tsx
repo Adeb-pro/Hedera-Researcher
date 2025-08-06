@@ -119,7 +119,7 @@ export default function Dashboard() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div>
                 <h1 className="text-4xl font-bold mb-2">Welcome back, Dr. Smith</h1>
-                <p className="text-dark-400 text-lg">Here's what's happening with your research projects</p>
+                <p className="text-dark-400 text-lg">Here&apos;s what&apos;s happening with your research projects</p>
               </div>
               <div className="mt-4 md:mt-0 flex gap-3">
                 <Link href="/projects/create">

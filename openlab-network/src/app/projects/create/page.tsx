@@ -72,7 +72,7 @@ export default function CreateProject() {
   const [newTag, setNewTag] = useState("")
   const [loading, setLoading] = useState(false)
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: React.FormEvent) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 

@@ -3,7 +3,7 @@ import { ethers } from "ethers"
 // Extend Window interface to include ethereum property
 declare global {
   interface Window {
-    ethereum?: any
+    ethereum?: Record<string, unknown>
   }
 }
 

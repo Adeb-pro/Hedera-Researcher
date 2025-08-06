@@ -64,7 +64,7 @@ export function BlockchainProvider({ children }: { children: ReactNode }) {
       setPlatformStats(stats)
     } catch (err) {
       console.error("Failed to get platform stats:", err)
-      // Don't set error for stats failure, just log it
+      // Don&apos;t set error for stats failure, just log it
     }
   }
 

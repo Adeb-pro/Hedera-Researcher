@@ -376,10 +376,8 @@ export default function NotificationsPage() {
 function NotificationsList({
   notifications,
   selectedNotifications,
-  onSelectNotification,
-  onSelectAll,
 }: {
-  notifications: any[]
+  notifications: { id: string; read: boolean; title?: string; message?: string; timestamp?: string; type?: string; [key: string]: { id: string; read: boolean; title: string; message: string; timestamp: string; type: string; priority?: string; metadata?: any; [key: string]: unknown } }[]
   selectedNotifications: string[]
   onSelectNotification: (id: string) => void
   onSelectAll: () => void

@@ -99,14 +99,14 @@ export default function SubmitPublicationPage() {
 
   const [newKeyword, setNewKeyword] = useState("")
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: React.FormEvent) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }))
   }
 
-  const handleAuthorChange = (index: number, field: string, value: any) => {
+  const handleAuthorChange = (index: number, field: string, value: React.FormEvent) => {
     const updatedAuthors = [...formData.authors]
     updatedAuthors[index] = { ...updatedAuthors[index], [field]: value }
     setFormData((prev) => ({

@@ -168,7 +168,6 @@ export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All Categories")
   const [sortBy, setSortBy] = useState("trending")
-  const [showFilters, setShowFilters] = useState(false)
 
   const filteredProjects = projects.filter((project) => {
     const matchesSearch =

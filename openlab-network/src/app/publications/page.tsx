@@ -252,7 +252,6 @@ export default function PublicationsPage() {
   const [selectedType, setSelectedType] = useState("All Types")
   const [selectedStatus, setSelectedStatus] = useState("All Status")
   const [sortBy, setSortBy] = useState("recent")
-  const [showFilters, setShowFilters] = useState(false)
 
   const filteredPublications = publications.filter((publication) => {
     const matchesSearch =

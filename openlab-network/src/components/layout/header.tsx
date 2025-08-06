@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Beaker, Menu, X, Wallet, ChevronDown, Zap } from "lucide-react"
+import { Beaker, Menu, X, Wallet, ChevronDown } from "lucide-react"
 import { Button } from "../../components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { useBlockchain } from "@/contexts/blockchain-context"
 import Link from "next/link"
 import Sidebar from "./sidebar"
@@ -74,15 +73,6 @@ export default function Header() {
                 <span className="text-xl font-bold bg-gradient-to-r from-primary-400 via-secondary-400 to-accent-400 bg-clip-text text-transparent">
                   OpenLab Network
                 </span>
-                <div className="flex items-center space-x-2 mt-0.5">
-                  <Badge
-                    variant="secondary"
-                    className="bg-primary-500/10 text-primary-400 border-primary-500/20 text-xs px-2 py-0"
-                  >
-                    <Zap className="w-2.5 h-2.5 mr-1" />
-                    Beta
-                  </Badge>
-                </div>
               </div>
             </Link>
           </div>

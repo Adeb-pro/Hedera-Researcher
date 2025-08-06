@@ -65,7 +65,8 @@ export default function ConnectWallet() {
 
       // Mock connection logic - in real app, integrate with actual wallet SDKs
       if (walletId === "metamask") {
-        if (typeof window !== "undefined" && (window as any).ethereum) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (typeof window !== "undefined" && (window as Window & { ethereum?: { request: (params: any) => Promise<any> } }).ethereum) {
           // Real MetaMask connection would go here
           setConnected(true)
         } else {

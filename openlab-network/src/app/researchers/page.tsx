@@ -239,7 +239,6 @@ export default function ResearchersPage() {
   const [selectedField, setSelectedField] = useState("All Fields")
   const [selectedLocation, setSelectedLocation] = useState("All Locations")
   const [sortBy, setSortBy] = useState("reputation")
-  const [showFilters, setShowFilters] = useState(false)
 
   const filteredResearchers = researchers.filter((researcher) => {
     const matchesSearch =

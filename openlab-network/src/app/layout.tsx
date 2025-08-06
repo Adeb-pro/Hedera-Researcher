@@ -33,8 +33,13 @@ export const metadata: Metadata = {
     title: "OpenLab Network",
     description: "Decentralized Scientific Research Platform",
   },
-  viewport: "width=device-width, initial-scale=1",
   robots: "index, follow",
+}
+
+// Separate viewport export (required in Next.js 15)
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
 }
 
 export default function RootLayout({

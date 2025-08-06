@@ -19,13 +19,15 @@ import {
   Star,
   TrendingUp,
   Zap,
+  ChevronLeft,
+  
 } from "lucide-react"
 import { Button } from "../../components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Progress } from "@/components/ui/progress"
 import { useBlockchain } from "@/contexts/blockchain-context"
+import { useState } from "react"
 import Link from "next/link"
 
 interface SidebarProps {
@@ -39,35 +41,35 @@ const menuItems = [
     href: "/dashboard",
     icon: Beaker,
     description: "Overview & Analytics",
-    color: "text-primary-400",
+    color: "text-blue-400",
   },
   {
     name: "Projects",
     href: "/projects",
     icon: FileText,
     description: "Research Projects",
-    color: "text-secondary-400",
+    color: "text-emerald-400",
   },
   {
     name: "Researchers",
     href: "/researchers",
     icon: Users,
     description: "Global Network",
-    color: "text-accent-400",
+    color: "text-violet-400",
   },
   {
     name: "Funding",
     href: "/funding",
     icon: DollarSign,
     description: "Investment Pools",
-    color: "text-success",
+    color: "text-green-400",
   },
   {
     name: "Publications",
     href: "/publications",
     icon: FileText,
     description: "Research Papers",
-    color: "text-warning",
+    color: "text-orange-400",
   },
   {
     name: "Notifications",
@@ -75,6 +77,7 @@ const menuItems = [
     icon: Bell,
     description: "Updates & Alerts",
     color: "text-purple-400",
+    badge: 3,
   },
   {
     name: "Help Center",
@@ -87,6 +90,7 @@ const menuItems = [
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { isConnected, account, connect, disconnect, isLoading, platformStats } = useBlockchain()
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`
@@ -96,294 +100,410 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     await connect()
   }
 
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed)
+  }
+
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop - only on mobile */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
             onClick={onClose}
           />
 
           {/* Sidebar */}
           <motion.div
             initial={{ x: -400, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
+            animate={{ 
+              x: 0, 
+              opacity: 1,
+              width: isCollapsed ? 80 : 320
+            }}
             exit={{ x: -400, opacity: 0 }}
             transition={{
               type: "spring",
-              damping: 25,
-              stiffness: 200,
+              damping: 30,
+              stiffness: 300,
               opacity: { duration: 0.2 },
+              width: { duration: 0.3, ease: "easeInOut" }
             }}
-            className="fixed left-0 top-0 h-full w-96 bg-gradient-to-b from-dark-900/98 via-dark-900/95 to-dark-800/98 backdrop-blur-xl border-r border-dark-700/50 z-50 overflow-y-auto shadow-2xl"
+            className="fixed left-0 top-0 h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 z-50 overflow-hidden shadow-xl"
           >
-            <div className="p-6">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-8">
-                <motion.div
-                  className="flex items-center space-x-3"
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.1 }}
-                >
-                  <div className="relative">
-                    <Beaker className="w-10 h-10 text-primary-500" />
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-success rounded-full animate-pulse" />
-                  </div>
-                  <div>
-                    <span className="text-xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
-                      OpenLab
-                    </span>
-                    <p className="text-xs text-dark-400 font-mono">v2.0.1</p>
-                  </div>
-                </motion.div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onClose}
-                  className="text-dark-400 hover:text-dark-50 hover:bg-dark-800/50 lg:hidden rounded-full"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
+            <div className="h-full flex flex-col">
+              {/* Header with Close Button */}
+              <div className={`flex items-center justify-between ${isCollapsed ? 'px-3 py-4' : 'px-6 py-4'} border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50`}>
+                {!isCollapsed && (
+                  <motion.div
+                    className="flex items-center space-x-3"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                  >
+                    <div className="relative">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                        <Beaker className="w-6 h-6 text-white" />
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-xl font-bold text-gray-900 dark:text-white">
+                        OpenLab
+                      </span>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">v2.0.1</p>
+                    </div>
+                  </motion.div>
+                )}
+
+                <div className="flex items-center space-x-2">
+                  {/* Collapse Toggle - Desktop */}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleCollapse}
+                    className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg hidden lg:flex w-8 h-8 p-0"
+                  >
+                    {isCollapsed ? (
+                      <ChevronRight className="w-4 h-4" />
+                    ) : (
+                      <ChevronLeft className="w-4 h-4" />
+                    )}
+                  </Button>
+
+                  {/* Close Button - Always Visible */}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={onClose}
+                    className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg w-8 h-8 p-0"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
 
-              {/* User Profile Section */}
-              <motion.div
-                className="mb-8"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.2 }}
-              >
-                {isConnected ? (
-                  <div className="relative bg-gradient-to-br from-dark-800/80 via-dark-800/60 to-dark-700/80 rounded-2xl p-6 border border-dark-600/50 backdrop-blur-sm overflow-hidden">
-                    {/* Background Pattern */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5" />
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-primary-500/10 to-transparent rounded-full blur-2xl" />
-
-                    <div className="relative">
-                      <div className="flex items-center space-x-4 mb-6">
-                        <div className="relative">
-                          <Avatar className="w-16 h-16 ring-2 ring-primary-500/30">
-                            <AvatarImage src="/placeholder.svg?height=64&width=64" />
-                            <AvatarFallback className="bg-gradient-to-br from-primary-600 to-secondary-600 text-white text-lg font-bold">
-                              {account?.slice(2, 4).toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-success rounded-full border-2 border-dark-800 flex items-center justify-center">
-                            <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                          </div>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-lg font-bold text-dark-50 mb-1">Dr. Researcher</h3>
-                          <p className="text-sm text-dark-400 font-mono truncate">{formatAddress(account || "")}</p>
-                          <div className="flex items-center space-x-2 mt-2">
-                            <Badge variant="secondary" className="bg-success/10 text-success border-success/20 text-xs">
-                              <Zap className="w-3 h-3 mr-1" />
-                              Connected
-                            </Badge>
-                            <Badge variant="outline" className="border-primary-500/30 text-primary-400 text-xs">
-                              <Star className="w-3 h-3 mr-1" />
-                              850 Rep
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Reputation Progress */}
-                      <div className="mb-6">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm font-medium text-dark-300">Reputation Level</span>
-                          <span className="text-sm text-primary-400 font-bold">Level 8</span>
-                        </div>
-                        <Progress value={75} className="h-2 bg-dark-700" />
-                        <p className="text-xs text-dark-400 mt-1">150 points to next level</p>
-                      </div>
-
-                      {/* Quick Stats */}
-                      <div className="grid grid-cols-3 gap-4 mb-6">
-                        <div className="text-center">
-                          <div className="text-lg font-bold text-primary-400">12</div>
-                          <div className="text-xs text-dark-400">Projects</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-lg font-bold text-success">$24K</div>
-                          <div className="text-xs text-dark-400">Funded</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-lg font-bold text-accent-400">89</div>
-                          <div className="text-xs text-dark-400">Reviews</div>
-                        </div>
-                      </div>
-
-                      <div className="flex space-x-2">
-                        <Link href="/profile" className="flex-1">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="w-full border-dark-600/50 text-dark-300 hover:bg-dark-700/50 bg-transparent backdrop-blur-sm"
-                          >
-                            <User className="w-4 h-4 mr-2" />
-                            Profile
-                          </Button>
-                        </Link>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={disconnect}
-                          className="border-red-500/30 text-red-400 hover:bg-red-500/10 bg-transparent backdrop-blur-sm"
-                        >
-                          <LogOut className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative bg-gradient-to-br from-dark-800/80 via-dark-800/60 to-dark-700/80 rounded-2xl p-6 border border-dark-600/50 backdrop-blur-sm overflow-hidden">
-                    {/* Background Pattern */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-accent-500/5 via-transparent to-primary-500/5" />
-
-                    <div className="relative text-center mb-6">
-                      <div className="w-20 h-20 bg-gradient-to-br from-dark-700 to-dark-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-dark-600/50">
-                        <User className="w-10 h-10 text-dark-400" />
-                      </div>
-                      <h3 className="text-xl font-bold text-dark-50 mb-2">Welcome to OpenLab</h3>
-                      <p className="text-sm text-dark-400 leading-relaxed">
-                        Connect your wallet to access the decentralized research network
-                      </p>
-                    </div>
-
-                    <div className="space-y-3">
-                      <Button
-                        onClick={handleConnectWallet}
-                        disabled={isLoading}
-                        className="w-full bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                      >
-                        <Wallet className="w-4 h-4 mr-2" />
-                        {isLoading ? "Connecting..." : "Connect Wallet"}
-                      </Button>
-
-                      <div className="flex space-x-2">
-                        <Link href="/auth/signin" className="flex-1">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="w-full border-accent-500/30 text-accent-400 hover:bg-accent-500/10 bg-transparent backdrop-blur-sm"
-                          >
-                            <LogIn className="w-4 h-4 mr-2" />
-                            Sign In
-                          </Button>
-                        </Link>
-                        <Link href="/auth/signup" className="flex-1">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="w-full border-secondary-500/30 text-secondary-400 hover:bg-secondary-500/10 bg-transparent backdrop-blur-sm"
-                          >
-                            <UserPlus className="w-4 h-4 mr-2" />
-                            Sign Up
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </motion.div>
-
-              <Separator className="bg-gradient-to-r from-transparent via-dark-600 to-transparent mb-6" />
-
-              {/* Platform Stats */}
-              {platformStats && (
-                <motion.div
-                  className="mb-6"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <div className="bg-gradient-to-br from-dark-800/60 to-dark-700/60 rounded-xl p-4 border border-dark-600/30 backdrop-blur-sm">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-sm font-semibold text-dark-200">Platform Stats</h4>
-                      <TrendingUp className="w-4 h-4 text-success" />
-                    </div>
-                    <div className="grid grid-cols-2 gap-3 text-center">
-                      <div>
-                        <div className="text-lg font-bold text-primary-400">{platformStats.totalProjects}</div>
-                        <div className="text-xs text-dark-400">Projects</div>
-                      </div>
-                      <div>
-                        <div className="text-lg font-bold text-success">${platformStats.totalFunding}M</div>
-                        <div className="text-xs text-dark-400">Funded</div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Navigation Menu */}
-              <motion.nav
-                className="space-y-2"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-              >
-                {menuItems.map((item, index) => (
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto">
+                <div className={`${isCollapsed ? 'px-3 py-4' : 'px-6 py-6'}`}>
+                  {/* User Profile Section */}
                   <motion.div
-                    key={item.name}
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.4 + index * 0.05 }}
+                    className="mb-6"
+                    layout
+                    transition={{ duration: 0.3 }}
                   >
-                    <Link href={item.href}>
+                    {isConnected ? (
+                      <div className={`bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden ${
+                        isCollapsed ? 'p-3' : 'p-5'
+                      }`}>
+                        <div className={`flex items-center ${isCollapsed ? 'justify-center mb-3' : 'space-x-3 mb-4'}`}>
+                          <div className="relative">
+                            <Avatar className={`ring-2 ring-blue-500/30 ${isCollapsed ? 'w-10 h-10' : 'w-12 h-12'}`}>
+                              <AvatarImage src="/placeholder.svg" />
+                              <AvatarFallback className="bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold">
+                                {account?.slice(2, 4).toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className={`absolute -bottom-1 -right-1 bg-green-500 rounded-full border-2 border-white dark:border-gray-900 ${
+                              isCollapsed ? 'w-4 h-4' : 'w-5 h-5'
+                            }`}>
+                            </div>
+                          </div>
+                          
+                          {!isCollapsed && (
+                            <motion.div 
+                              className="flex-1 min-w-0"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                            >
+                              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">Dr. Researcher</h3>
+                              <p className="text-xs text-gray-500 dark:text-gray-400 font-mono truncate">{formatAddress(account || "")}</p>
+                              <div className="flex items-center space-x-2 mt-2">
+                                <Badge className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800 text-xs px-2 py-0.5">
+                                  <Zap className="w-2.5 h-2.5 mr-1" />
+                                  Online
+                                </Badge>
+                                <Badge variant="outline" className="border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 text-xs px-2 py-0.5">
+                                  <Star className="w-2.5 h-2.5 mr-1" />
+                                  850
+                                </Badge>
+                              </div>
+                            </motion.div>
+                          )}
+                        </div>
+
+                        {!isCollapsed && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="space-y-3"
+                          >
+                            {/* Quick Stats */}
+                            <div className="grid grid-cols-3 gap-3 text-center">
+                              <div>
+                                <div className="text-lg font-bold text-blue-600 dark:text-blue-400">12</div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">Projects</div>
+                              </div>
+                              <div>
+                                <div className="text-lg font-bold text-green-600 dark:text-green-400">$24K</div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">Funded</div>
+                              </div>
+                              <div>
+                                <div className="text-lg font-bold text-purple-600 dark:text-purple-400">89</div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">Reviews</div>
+                              </div>
+                            </div>
+
+                            <div className="flex space-x-2">
+                              <Link href="/profile" className="flex-1">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="w-full text-xs h-8"
+                                >
+                                  <User className="w-3 h-3 mr-1.5" />
+                                  Profile
+                                </Button>
+                              </Link>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={disconnect}
+                                className="border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 px-2 h-8"
+                              >
+                                <LogOut className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </motion.div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className={`bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden ${
+                        isCollapsed ? 'p-3' : 'p-5'
+                      }`}>
+                        <div className="text-center">
+                          <div className={`bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center mx-auto mb-3 ${
+                            isCollapsed ? 'w-10 h-10' : 'w-16 h-16'
+                          }`}>
+                            <User className={`text-gray-500 dark:text-gray-400 ${isCollapsed ? 'w-5 h-5' : 'w-8 h-8'}`} />
+                          </div>
+                          
+                          {!isCollapsed && (
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="space-y-3"
+                            >
+                              <div>
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Welcome</h3>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                  Connect to access the research network
+                                </p>
+                              </div>
+
+                              <Button
+                                onClick={handleConnectWallet}
+                                disabled={isLoading}
+                                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white h-10"
+                              >
+                                <Wallet className="w-4 h-4 mr-2" />
+                                {isLoading ? "Connecting..." : "Connect Wallet"}
+                              </Button>
+
+                              <div className="flex space-x-2">
+                                <Link href="/auth/signin" className="flex-1">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="w-full text-xs h-8"
+                                  >
+                                    <LogIn className="w-3 h-3 mr-1.5" />
+                                    Sign In
+                                  </Button>
+                                </Link>
+                                <Link href="/auth/signup" className="flex-1">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="w-full text-xs h-8"
+                                  >
+                                    <UserPlus className="w-3 h-3 mr-1.5" />
+                                    Sign Up
+                                  </Button>
+                                </Link>
+                              </div>
+                            </motion.div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+
+                  {/* Separator */}
+                  {!isCollapsed && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="mb-6"
+                    >
+                      <Separator className="bg-gray-200 dark:bg-gray-700" />
+                    </motion.div>
+                  )}
+
+                  {/* Platform Stats */}
+                  {!isCollapsed && platformStats && (
+                    <motion.div
+                      className="mb-6"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                    >
+                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-4 border border-blue-100 dark:border-blue-800">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="text-sm font-semibold text-gray-900 dark:text-white">Platform Stats</h4>
+                          <TrendingUp className="w-4 h-4 text-green-500" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-3 text-center">
+                          <div>
+                            <div className="text-xl font-bold text-blue-600 dark:text-blue-400">{platformStats.totalProjects}</div>
+                            <div className="text-xs text-gray-600 dark:text-gray-400">Projects</div>
+                          </div>
+                          <div>
+                            <div className="text-xl font-bold text-green-600 dark:text-green-400">${platformStats.totalFunding}M</div>
+                            <div className="text-xs text-gray-600 dark:text-gray-400">Funded</div>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* Navigation Menu */}
+                  <nav className="space-y-2">
+                    {menuItems.map((item) => (
+                      <motion.div
+                        key={item.name}
+                        layout
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Link href={item.href}>
+                          <Button
+                            variant="ghost"
+                            className={`w-full justify-start text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg group transition-all duration-200 relative ${
+                              isCollapsed ? 'px-2 py-2 h-10' : 'px-3 py-2.5 h-auto'
+                            }`}
+                            onClick={onClose}
+                          >
+                            <div
+                              className={`rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors ${
+                                isCollapsed ? 'w-6 h-6 mr-0' : 'w-8 h-8 mr-3'
+                              }`}
+                            >
+                              <item.icon className={`${item.color} ${isCollapsed ? 'w-4 h-4' : 'w-4 h-4'}`} />
+                            </div>
+                            
+                            {!isCollapsed && (
+                              <motion.div 
+                                className="flex-1 text-left"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                              >
+                                <div className="font-medium text-sm flex items-center">
+                                  {item.name}
+                                  {item.badge && (
+                                    <Badge className="ml-2 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800 text-xs px-1.5 py-0">
+                                      {item.badge}
+                                    </Badge>
+                                  )}
+                                </div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors">
+                                  {item.description}
+                                </div>
+                              </motion.div>
+                            )}
+                            
+                            {!isCollapsed && (
+                              <ChevronRight className="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200 text-gray-400" />
+                            )}
+
+                            {/* Tooltip for collapsed state */}
+                            {isCollapsed && (
+                              <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                                {item.name}
+                                <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-900 dark:bg-gray-100 rotate-45" />
+                              </div>
+                            )}
+                          </Button>
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </nav>
+
+                  {/* Separator */}
+                  {!isCollapsed && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="my-6"
+                    >
+                      <Separator className="bg-gray-200 dark:bg-gray-700" />
+                    </motion.div>
+                  )}
+
+                  {/* Settings */}
+                  <motion.div layout transition={{ duration: 0.2 }}>
+                    <Link href="/settings">
                       <Button
                         variant="ghost"
-                        className="w-full justify-start text-dark-300 hover:text-dark-50 hover:bg-dark-800/50 rounded-xl p-4 h-auto group transition-all duration-300"
+                        className={`w-full justify-start text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg group transition-all duration-200 relative ${
+                          isCollapsed ? 'px-2 py-2 h-10' : 'px-3 py-2.5 h-auto'
+                        }`}
                         onClick={onClose}
                       >
-                        <div
-                          className={`w-10 h-10 rounded-lg bg-dark-700/50 flex items-center justify-center mr-4 group-hover:bg-dark-600/50 transition-colors`}
-                        >
-                          <item.icon className={`w-5 h-5 ${item.color}`} />
+                        <div className={`rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors ${
+                          isCollapsed ? 'w-6 h-6 mr-0' : 'w-8 h-8 mr-3'
+                        }`}>
+                          <Settings className={`text-gray-500 dark:text-gray-400 ${isCollapsed ? 'w-4 h-4' : 'w-4 h-4'}`} />
                         </div>
-                        <div className="flex-1 text-left">
-                          <div className="font-medium">{item.name}</div>
-                          <div className="text-xs text-dark-400 group-hover:text-dark-300 transition-colors">
-                            {item.description}
+                        
+                        {!isCollapsed && (
+                          <motion.div 
+                            className="flex-1 text-left"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                          >
+                            <div className="font-medium text-sm">Settings</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors">
+                              Preferences & Config
+                            </div>
+                          </motion.div>
+                        )}
+                        
+                        {!isCollapsed && (
+                          <ChevronRight className="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200 text-gray-400" />
+                        )}
+
+                        {/* Tooltip for collapsed state */}
+                        {isCollapsed && (
+                          <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                            Settings
+                            <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-900 dark:bg-gray-100 rotate-45" />
                           </div>
-                        </div>
-                        <ChevronRight className="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
+                        )}
                       </Button>
                     </Link>
                   </motion.div>
-                ))}
-              </motion.nav>
-
-              <Separator className="bg-gradient-to-r from-transparent via-dark-600 to-transparent my-6" />
-
-              {/* Settings */}
-              <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8 }}>
-                <Link href="/settings">
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start text-dark-300 hover:text-dark-50 hover:bg-dark-800/50 rounded-xl p-4 h-auto group transition-all duration-300"
-                    onClick={onClose}
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-dark-700/50 flex items-center justify-center mr-4 group-hover:bg-dark-600/50 transition-colors">
-                      <Settings className="w-5 h-5 text-gray-400" />
-                    </div>
-                    <div className="flex-1 text-left">
-                      <div className="font-medium">Settings</div>
-                      <div className="text-xs text-dark-400 group-hover:text-dark-300 transition-colors">
-                        Preferences & Config
-                      </div>
-                    </div>
-                    <ChevronRight className="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
-                  </Button>
-                </Link>
-              </motion.div>
+                </div>
+              </div>
             </div>
           </motion.div>
         </>
