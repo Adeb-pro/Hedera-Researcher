@@ -101,7 +101,7 @@ export default function NotificationSettings() {
     setSettings((prev) => {
       const keys = path.split(".")
       const updated = { ...prev }
-      let current: React.FormEvent = updated
+      let current: any = updated
 
       for (let i = 0; i < keys.length - 1; i++) {
         current[keys[i]] = { ...current[keys[i]] }
@@ -135,7 +135,7 @@ export default function NotificationSettings() {
           email: { ...prev.email, enabled: true, frequency: "immediate" },
           push: { ...prev.push, enabled: true },
           inApp: { ...prev.inApp, enabled: true },
-          categories: Object.keys(prev.categories).reduce((acc, key) => ({ ...acc, [key]: true }), {} as unknown),
+          categories: Object.keys(prev.categories).reduce((acc, key) => ({ ...acc, [key]: true }), {} as NotificationSettings['categories']),
         }))
         setHasChanges(true)
       },

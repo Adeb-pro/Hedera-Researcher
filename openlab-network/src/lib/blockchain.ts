@@ -3,7 +3,12 @@ import { ethers } from "ethers"
 // Extend Window interface to include ethereum property
 declare global {
   interface Window {
-    ethereum?: Record<string, unknown>
+    ethereum?: {
+      request(request: {
+        method: string;
+        params?: Array<any> | Record<string, any>;
+      }): Promise<any>;
+    } & Record<string, unknown>
   }
 }
 

@@ -120,7 +120,7 @@ export default function ReviewInterface() {
     }))
   }
 
-  const handleInputChange = (field: string, value: React.FormEvent) => {
+  const handleInputChange = (field: string, value: any) => {
     setReviewData((prev) => ({ ...prev, [field]: value }))
   }
 

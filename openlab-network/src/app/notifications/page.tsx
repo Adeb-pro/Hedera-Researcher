@@ -376,8 +376,19 @@ export default function NotificationsPage() {
 function NotificationsList({
   notifications,
   selectedNotifications,
+  onSelectNotification,
+  onSelectAll,
 }: {
-  notifications: { id: string; read: boolean; title?: string; message?: string; timestamp?: string; type?: string; [key: string]: { id: string; read: boolean; title: string; message: string; timestamp: string; type: string; priority?: string; metadata?: any; [key: string]: unknown } }[]
+  notifications: Array<{
+    id: string
+    type: string
+    title: string
+    message: string
+    timestamp: string
+    read: boolean
+    priority: string
+    metadata: any
+  }>
   selectedNotifications: string[]
   onSelectNotification: (id: string) => void
   onSelectAll: () => void
@@ -429,7 +440,7 @@ function NotificationsList({
                       <h3 className={`font-semibold ${!notification.read ? "text-dark-50" : "text-dark-300"}`}>
                         {notification.title}
                       </h3>
-                      <Badge className={getPriorityColor(notification.priority)}>{notification.priority}</Badge>
+                      <Badge className={getPriorityColor(notification.priority || "low")}>{notification.priority || "low"}</Badge>
                       {!notification.read && <div className="w-2 h-2 bg-primary-500 rounded-full"></div>}
                     </div>
                     <div className="flex items-center gap-2">
